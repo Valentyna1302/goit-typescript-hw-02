@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
-import SearchBar from "./components/SearchBar/SearchBar";
-import ImageGallery from "./components/ImageGallery/ImageGallery";
-import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import ImageGallery from "./components/ImageGallery/ImageGallery";
 import ImageModal from "./components/ImageModal/ImageModal";
-import { fetchImagesWithTopic } from "./images-api";
+import Loader from "./components/Loader/Loader";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import SearchBar from "./components/SearchBar/SearchBar";
+import { fetchImagesWithTopic } from "./images-api";
+import { Image } from "./types";
 
 function App() {
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [currentImage, setCurrentImage] = useState({});
+  const [images, setImages] = useState<Image[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<Image | null>(null);
 
   useEffect(() => {
     if (!query) return;
@@ -36,7 +37,7 @@ function App() {
     getData();
   }, [query, page]);
 
-  const handleSearch = (newQuery) => {
+  const handleSearch = (newQuery: string) => {
     if (query === newQuery) return;
     setQuery(newQuery);
     setImages([]);
@@ -44,13 +45,15 @@ function App() {
     setTotalPages(0);
   };
 
-  const handleOpenModal = (image) => {
-    setCurrentImage(image);
-    setModalIsOpen(true);
+  const handleOpenModal = (image: Image) => {
+    if (!modalIsOpen) {
+      setCurrentImage(image);
+      setModalIsOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
-    setCurrentImage({});
+    setCurrentImage(null);
     setModalIsOpen(false);
   };
 
@@ -67,7 +70,7 @@ function App() {
         <LoadMoreBtn setPage={setPage} />
       )}
 
-      {modalIsOpen && (
+      {modalIsOpen && currentImage && (
         <ImageModal
           isOpen={modalIsOpen}
           onCloseModal={handleCloseModal}

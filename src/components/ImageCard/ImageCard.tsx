@@ -1,6 +1,12 @@
+import { Image } from "../../types";
 import s from "./ImageCard.module.css";
 
-const ImageCard = ({ image, onClick }) => {
+interface ImageCardProps {
+  image: Image;
+  onClick: (image: Image) => void;
+}
+
+const ImageCard = ({ image, onClick }: ImageCardProps) => {
   const { urls, alt_description } = image;
   return (
     <div>

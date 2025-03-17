@@ -1,5 +1,12 @@
 import Modal from "react-modal";
+import { Image } from "../../types";
 import s from "./ImageModal.module.css";
+
+interface ImageModalProps {
+  isOpen: boolean;
+  onCloseModal: () => void;
+  currentImage: Image;
+}
 
 const customStyles = {
   content: {
@@ -16,8 +23,12 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const ImageModal = ({ isOpen, onCloseModal, currentImage }) => {
-  if (!isOpen) return;
+const ImageModal = ({
+  isOpen,
+  onCloseModal,
+  currentImage,
+}: ImageModalProps) => {
+  if (!isOpen || !currentImage) return null;
 
   const {
     likes,
@@ -39,7 +50,7 @@ const ImageModal = ({ isOpen, onCloseModal, currentImage }) => {
       <div className={s.modal}>
         <img
           src={urls.regular}
-          alt={alt_description}
+          alt={alt_description || "Image"}
           className={s.modalImage}
         />
         <div className={s.text}>
